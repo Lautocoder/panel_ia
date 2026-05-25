@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Fiche Panel — IA & performance professionnelle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="deck-stage.js"></script>
+<style>
+  :root {
+    /* type scale (1920x1080) */
+    --type-display: 108px;
+    --type-title: 72px;
+    --type-subtitle: 48px;
+    --type-question: 54px;
+    --type-body: 32px;
+    --type-small: 26px;
+    --type-eyebrow: 24px;
+    --type-mono: 24px;
+
+    /* spacing */
+    --pad-top: 88px;
+    --pad-bottom: 80px;
+    --pad-x: 110px;
+    --gap-title: 52px;
+    --gap-item: 28px;
+
+    /* color */
+    --bg-cream: #F2EDE4;
+    --bg-paper: #EAE3D6;
+    --bg-ink: #1B1F2A;
+    --bg-warm-ink: #221E18;
+    --fg-ink: #1B1F2A;
+    --fg-muted: #6B6660;
+    --fg-soft: #8C857C;
+    --line: #1B1F2A;
+    --line-soft: rgba(27,31,42,0.18);
+    --accent: oklch(0.62 0.13 38);     /* terracotta */
+    --accent-deep: oklch(0.48 0.11 38);
+    --accent-soft: oklch(0.92 0.04 60);
+  }
+
+  html, body { margin: 0; padding: 0; background: #0a0a0a; }
+  body {
+    font-family: 'Geist', system-ui, sans-serif;
+    color: var(--fg-ink);
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+  }
+  deck-stage section {
+    background: var(--bg-cream);
+    color: var(--fg-ink);
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+    display: flex;
+    flex-direction: column;
+  }
+  deck-stage section.dark { background: var(--bg-ink); color: var(--bg-cream); }
+  deck-stage section.warm { background: var(--bg-warm-ink); color: var(--bg-cream); }
+  deck-stage section.paper { background: var(--bg-paper); }
+
+  /* ===== shared atoms ===== */
+  .serif { font-family: 'Source Serif 4', 'Georgia', serif; font-weight: 400; }
+  .mono { font-family: 'Geist Mono', monospace; }
+  .eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: var(--type-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fg-muted);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .eyebrow .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .dark .eyebrow, .warm .eyebrow { color: rgba(242,237,228,0.65); }
+  .question {
+    font-family: 'Source Serif 4', serif;
+    font-size: var(--type-question);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    max-width: 1500px;
+    text-wrap: pretty;
+  }
+  .creole {
+    font-family: 'Geist Mono', monospace;
+    font-size: var(--type-small);
+    font-style: normal;
+    color: var(--accent-deep);
+    letter-spacing: 0.01em;
+  }
+  .dark .creole, .warm .creole { color: oklch(0.82 0.08 60); }
+  .footer-rule {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 28px;
+    border-top: 1px solid var(--line-soft);
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+  .dark .footer-rule, .warm .footer-rule {
+    border-top-color: rgba(242,237,228,0.18);
+    color: rgba(242,237,228,0.55);
+  }
+
+  /* ===== title slide ===== */
+  .title-slide { padding: 110px var(--pad-x) 96px; }
+  .title-slide .deck-mark {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .title-slide h1 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 400;
+    font-size: 120px;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    margin: 64px 0 0;
+    text-wrap: balance;
+    max-width: 1600px;
+  }
+  .title-slide h1 .ln { display: block; }
+  .title-slide h1 .accent-word { font-style: italic; color: var(--accent-deep); }
+  .title-slide .sub {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 44px;
+    color: var(--fg-muted);
+    margin-top: 40px;
+    max-width: 1300px;
+    line-height: 1.25;
+  }
+  .title-slide .meta {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+  .title-slide .meta strong { color: var(--fg-ink); font-weight: 500; }
+
+  /* ===== agenda ===== */
+  .agenda-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 80px;
+    margin-top: 64px;
+  }
+  .agenda-item {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 32px;
+    padding: 28px 0 30px;
+    border-top: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .agenda-item .num {
+    font-family: 'Source Serif 4', serif;
+    font-size: 68px;
+    font-style: italic;
+    line-height: 1;
+    color: var(--accent-deep);
+  }
+  .agenda-item .head { font-family: 'Source Serif 4', serif; font-size: 38px; line-height: 1.15; }
+  .agenda-item .desc { font-size: 24px; color: var(--fg-muted); margin-top: 8px; line-height: 1.4; }
+
+  /* ===== section cover ===== */
+  .cover {
+    justify-content: space-between;
+  }
+  .cover .bloc-num {
+    font-family: 'Geist Mono', monospace;
+    font-size: 26px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .cover h2 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 400;
+    font-size: 180px;
+    line-height: 0.94;
+    letter-spacing: -0.025em;
+    margin: 0;
+    text-wrap: balance;
+    max-width: 1500px;
+  }
+  .cover h2 em { font-style: italic; color: oklch(0.78 0.1 38); }
+  .cover .tag {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 42px;
+    color: rgba(242,237,228,0.7);
+    margin-top: 36px;
+    max-width: 1100px;
+  }
+  .cover .bloc-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(242,237,228,0.55);
+    padding-top: 28px;
+    border-top: 1px solid rgba(242,237,228,0.18);
+  }
+
+  /* ===== question slide layouts ===== */
+  .q-slide .head { margin-bottom: var(--gap-title); }
+  .q-slide .question { margin-top: 24px; }
+
+  /* three-column points */
+  .points-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 48px;
+    margin-top: 56px;
+  }
+  .point {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-top: 24px;
+    border-top: 2px solid var(--line);
+  }
+  .point .idx {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.18em;
+    color: var(--accent-deep);
+  }
+  .point h3 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 400;
+    font-size: 38px;
+    line-height: 1.12;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .point p {
+    font-size: var(--type-body);
+    line-height: 1.35;
+    color: var(--fg-ink);
+    margin: 0;
+    text-wrap: pretty;
+  }
+  .point p.muted { color: var(--fg-muted); font-size: 26px; line-height: 1.4; }
+
+  /* two-column split (question left, answer right) */
+  .split {
+    display: grid;
+    grid-template-columns: 540px 1fr;
+    gap: 100px;
+    margin-top: 32px;
+    flex: 1;
+  }
+  .split .left .question { font-size: 48px; }
+  .split .right { display: flex; flex-direction: column; gap: 36px; }
+  .answer-line {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 24px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line-soft);
+    align-items: baseline;
+  }
+  .answer-line:last-child { border-bottom: none; }
+  .answer-line .mark {
+    font-family: 'Source Serif 4', serif;
+    font-size: 42px;
+    font-style: italic;
+    color: var(--accent-deep);
+    line-height: 1;
+  }
+  .answer-line h4 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 400;
+    font-size: 34px;
+    margin: 0 0 10px;
+    line-height: 1.2;
+  }
+  .answer-line p { font-size: 26px; line-height: 1.4; color: var(--fg-ink); margin: 0; text-wrap: pretty; }
+  .answer-line p .em { color: var(--fg-muted); font-style: italic; }
+
+  /* steps timeline */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    margin-top: 56px;
+    position: relative;
+  }
+  .step { display: flex; flex-direction: column; gap: 16px; padding-top: 32px; border-top: 2px solid var(--line); }
+  .step .n { font-family: 'Geist Mono', monospace; font-size: 24px; letter-spacing: 0.18em; color: var(--accent-deep); }
+  .step h4 { font-family: 'Source Serif 4', serif; font-weight: 400; font-size: 34px; margin: 0; line-height: 1.15; }
+  .step p { font-size: 24px; line-height: 1.4; color: var(--fg-muted); margin: 0; }
+
+  /* big quote / recommendation */
+  .quote-slide { justify-content: space-between; }
+  .quote-slide .quote {
+    font-family: 'Source Serif 4', serif;
+    font-size: 96px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    max-width: 1600px;
+    margin-top: 40px;
+  }
+  .quote-slide .quote em { font-style: italic; color: var(--accent-deep); }
+  .quote-slide .attribution {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    margin-top: 60px;
+  }
+  .quote-slide .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 60px;
+    margin-top: 80px;
+    padding-top: 36px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .quote-slide .pillars .p .lbl {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+  }
+  .quote-slide .pillars .p .txt {
+    font-family: 'Source Serif 4', serif;
+    font-size: 28px;
+    margin-top: 10px;
+    line-height: 1.3;
+    color: var(--fg-ink);
+  }
+
+  /* two-pane honest answer (yes/and) */
+  .honest {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    margin-top: 56px;
+    flex: 1;
+  }
+  .honest .pane { padding: 36px 40px; border: 1px solid var(--line); }
+  .honest .pane.warm { background: rgba(194,106,72,0.08); border-color: var(--accent-deep); }
+  .honest .pane h4 {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0 0 24px;
+    color: var(--accent-deep);
+  }
+  .honest .pane ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 18px; }
+  .honest .pane li { font-size: 26px; line-height: 1.4; padding-left: 28px; position: relative; text-wrap: pretty; }
+  .honest .pane li::before { content: '—'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+
+  /* mantras wall */
+  .mantras-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 1fr;
+    gap: 0;
+    margin-top: 40px;
+    border-top: 1px solid rgba(242,237,228,0.2);
+    border-left: 1px solid rgba(242,237,228,0.2);
+    flex: 1;
+    min-height: 0;
+  }
+  .mantra {
+    padding: 32px 44px;
+    border-right: 1px solid rgba(242,237,228,0.2);
+    border-bottom: 1px solid rgba(242,237,228,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  .mantra .fr {
+    font-family: 'Source Serif 4', serif;
+    font-size: 32px;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .mantra .ht {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    color: oklch(0.78 0.08 60);
+    text-transform: none;
+  }
+
+  /* checklist closing */
+  .checklist {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 80px;
+    margin-top: 64px;
+  }
+  .check-item {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 28px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line-soft);
+    align-items: center;
+  }
+  .check-item .box {
+    width: 40px; height: 40px;
+    border: 2px solid var(--fg-ink);
+  }
+  .check-item .label {
+    font-family: 'Source Serif 4', serif;
+    font-size: 36px;
+    line-height: 1.2;
+  }
+  .check-item .label .sub {
+    display: block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.06em;
+    color: var(--fg-muted);
+    margin-top: 6px;
+    text-transform: none;
+  }
+
+  /* tools categories */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    margin-top: 56px;
+  }
+  .tool-card {
+    border-top: 2px solid var(--line);
+    padding-top: 24px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .tool-card .cat {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+  }
+  .tool-card h4 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 400;
+    font-size: 30px;
+    margin: 0;
+    line-height: 1.15;
+  }
+  .tool-card .names {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    color: var(--fg-ink);
+  }
+  .tool-card p { font-size: 24px; color: var(--fg-muted); line-height: 1.4; margin: 0; }
+
+  /* case study */
+  .case {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 56px;
+    margin-top: 56px;
+    flex: 1;
+  }
+  .case-block { border-top: 2px solid var(--line); padding-top: 28px; }
+  .case-block .lbl { font-family: 'Geist Mono', monospace; font-size: 24px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent-deep); margin-bottom: 18px; }
+  .case-block .big {
+    font-family: 'Source Serif 4', serif;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+  }
+  .case-block p { font-size: 26px; line-height: 1.4; margin: 0; text-wrap: pretty; }
+  .case-block .lift {
+    color: var(--accent-deep);
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+  }
+
+  /* haiti examples */
+  .haiti-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 80px;
+    margin-top: 48px;
+    flex: 1;
+    align-content: start;
+  }
+  .haiti-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 28px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line-soft);
+    align-items: baseline;
+  }
+  .haiti-row .domain {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+  }
+  .haiti-row .ex {
+    font-family: 'Source Serif 4', serif;
+    font-size: 28px;
+    line-height: 1.3;
+    text-wrap: pretty;
+  }
+
+  /* limits cards */
+  .limits {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 48px;
+  }
+  .limit {
+    border: 1px solid var(--line);
+    padding: 32px 36px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .limit .tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+  }
+  .limit h4 { font-family: 'Source Serif 4', serif; font-weight: 400; font-size: 36px; margin: 0; line-height: 1.15; }
+  .limit p { font-size: 24px; line-height: 1.4; color: var(--fg-ink); margin: 0; }
+
+  /* values ethic */
+  .ethics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 48px;
+    flex: 1;
+  }
+  .ethics h4 {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0 0 28px;
+  }
+  .ethics .red h4 { color: #B0492B; }
+  .ethics .green h4 { color: oklch(0.5 0.1 145); }
+  .ethics ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 22px; }
+  .ethics li {
+    font-family: 'Source Serif 4', serif;
+    font-size: 28px;
+    line-height: 1.3;
+    padding-left: 36px;
+    position: relative;
+    text-wrap: pretty;
+  }
+  .ethics .red li::before { content: '×'; position: absolute; left: 0; top: -4px; color: #B0492B; font-size: 36px; font-weight: 500; }
+  .ethics .green li::before { content: '✓'; position: absolute; left: 0; top: 2px; color: oklch(0.55 0.1 145); font-size: 28px; font-weight: 600; }
+  .ethics .rule {
+    grid-column: 1 / -1;
+    margin-top: 24px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 32px;
+    line-height: 1.3;
+    color: var(--fg-ink);
+  }
+
+  /* future certitudes */
+  .certitudes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+    margin-top: 56px;
+  }
+  .cert {
+    padding: 36px 32px;
+    background: rgba(27,31,42,0.04);
+    border-top: 3px solid var(--accent);
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .cert .n {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 64px;
+    color: var(--accent-deep);
+    line-height: 1;
+  }
+  .cert h4 { font-family: 'Source Serif 4', serif; font-weight: 400; font-size: 32px; margin: 0; line-height: 1.2; text-wrap: balance; }
+  .cert p { font-size: 24px; line-height: 1.4; color: var(--fg-muted); margin: 0; }
+
+  /* message slide (3 strong lines) */
+  .three-lines { margin-top: 56px; display: flex; flex-direction: column; gap: 36px; }
+  .three-lines .line {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 28px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line-soft);
+    align-items: baseline;
+  }
+  .three-lines .line .n {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.18em;
+    color: var(--accent-deep);
+  }
+  .three-lines .line .txt {
+    font-family: 'Source Serif 4', serif;
+    font-size: 48px;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  /* slide number indicator */
+  .slide-id {
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.18em;
+    color: var(--fg-muted);
+  }
+</style>
+</head>
+<body>
+<deck-stage width="1920" height="1080">
+
+  <!-- ============================================================ -->
+  <!-- 01. TITLE                                                     -->
+  <!-- ============================================================ -->
+  <section class="title-slide" data-label="01 Titre">
+    <div class="deck-mark">Fiche de préparation · Intervenant</div>
+    <h1>
+      <span class="ln">L'intelligence <span class="accent-word">artificielle</span></span>
+      <span class="ln">au service de la</span>
+      <span class="ln">performance professionnelle.</span>
+    </h1>
+    <div class="sub">Opportunités, usages et limites — une conférence-panel en 5 blocs, 14 questions.</div>
+    <div class="meta">
+      <div><strong>Panel — Intervenant</strong> · Professionnel utilisateur d'IA</div>
+      <div>Bilingue FR / Kreyòl</div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 02. MA POSTURE & AGENDA                                       -->
+  <!-- ============================================================ -->
+  <section data-label="02 Posture & agenda">
+    <div class="eyebrow"><span class="dot"></span>Avant de commencer</div>
+    <div class="question serif" style="margin-top:36px; max-width: 1500px;">
+      Ma posture ce soir : <em style="font-style:italic; color: var(--accent-deep);">professionnel utilisateur</em>, pas développeur. Je parle d'usage, pas de code.
+    </div>
+    <div class="agenda-grid">
+      <div class="agenda-item">
+        <div class="num">01</div>
+        <div>
+          <div class="head">Comprendre l'IA</div>
+          <div class="desc">Démystifier pour mieux agir · 2 questions</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="num">02</div>
+        <div>
+          <div class="head">Opportunités</div>
+          <div class="desc">Ce que l'IA rend possible · 3 questions</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="num">03</div>
+        <div>
+          <div class="head">Usages pratiques</div>
+          <div class="desc">Se préparer et se lancer · 3 questions</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="num">04</div>
+        <div>
+          <div class="head">Limites & éthique</div>
+          <div class="desc">Risques et responsabilité · 3 questions</div>
+        </div>
+      </div>
+      <div class="agenda-item" style="grid-column: 1 / -1;">
+        <div class="num">05</div>
+        <div>
+          <div class="head">Perspectives</div>
+          <div class="desc">Mieux agir demain · 3 questions</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-rule">
+      <span>23 slides · à consulter avant et pendant</span>
+      <span>02</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 03. BLOC 1 COVER                                              -->
+  <!-- ============================================================ -->
+  <section class="dark cover" data-label="03 Bloc 1 — Comprendre l'IA">
+    <div class="bloc-num">Bloc 01 · 2 questions</div>
+    <div>
+      <h2>Comprendre <em>l'IA.</em></h2>
+      <div class="tag">Démystifier pour mieux agir.<br/><span class="creole" style="color: oklch(0.82 0.08 60);">Konprann anvan w sèvi avè l.</span></div>
+    </div>
+    <div class="bloc-meta">
+      <span>Démystifier</span>
+      <span>03</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 04. Q1.1 — DÉFINITION & POURQUOI MAINTENANT                    -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="04 Q1.1 Définition IA">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 1 · Question 1.1</div>
+      <div class="question">En termes simples — qu'est-ce que l'intelligence artificielle, et pourquoi est-elle devenue incontournable au travail ?</div>
+    </div>
+    <div class="points-3">
+      <div class="point">
+        <div class="idx">01 · Définir</div>
+        <h3>Une machine qui apprend à partir d'exemples.</h3>
+        <p>Elle écrit, traduit, résume, analyse, prédit — des tâches qu'on croyait réservées à l'humain. Rien de magique : statistiques + énormément de données.</p>
+      </div>
+      <div class="point">
+        <div class="idx">02 · Pourquoi maintenant</div>
+        <h3>Trois choses ont changé en même temps.</h3>
+        <p>Beaucoup de données disponibles. Puissance de calcul abordable. Et surtout — des modèles qui parlent notre langue, depuis fin 2022.</p>
+      </div>
+      <div class="point">
+        <div class="idx">03 · Pourquoi incontournable</div>
+        <h3>Ce n'est plus un outil de spécialiste.</h3>
+        <p>Comptables, avocats, enseignants, médecins l'utilisent déjà. Ignorer l'IA aujourd'hui, c'est ignorer l'email en 2005.</p>
+      </div>
+    </div>
+    <div class="footer-rule">
+      <span class="creole">« Se yon zouti — pa yon majisyen. »</span>
+      <span>04 · Q1.1</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 05. Q1.2 — OUTILS QUOTIDIENS                                  -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="05 Q1.2 Outils quotidiens">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 1 · Question 1.2</div>
+      <div class="question">Dans votre domaine — quels outils ou systèmes d'IA vous accompagnent concrètement au quotidien ?</div>
+    </div>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="cat">Rédaction & analyse</div>
+        <h4>Mon copilote d'écriture</h4>
+        <div class="names">ChatGPT · Claude</div>
+        <p>Brouillons, synthèses de documents longs, traduction FR ↔ EN, reformulation pour différents publics.</p>
+      </div>
+      <div class="tool-card">
+        <div class="cat">Recherche</div>
+        <h4>Réponses sourcées</h4>
+        <div class="names">Perplexity · Google AI</div>
+        <p>Pour les sujets où il me faut des sources vérifiables, pas une opinion.</p>
+      </div>
+      <div class="tool-card">
+        <div class="cat">Productivité</div>
+        <h4>Réunions & notes</h4>
+        <div class="names">Otter · Fathom · Notion AI</div>
+        <p>Transcription automatique, résumé de réunion, action items — je récupère 2h par semaine.</p>
+      </div>
+      <div class="tool-card">
+        <div class="cat">Visuel</div>
+        <h4>Supports & images</h4>
+        <div class="names">Canva AI · Midjourney</div>
+        <p>Maquettes, illustrations, présentations — pour aller plus vite sur la forme.</p>
+      </div>
+    </div>
+    <div style="margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--line-soft); font-family: 'Source Serif 4', serif; font-style: italic; font-size: 32px; color: var(--fg-ink); max-width: 1500px; line-height: 1.3;">
+      Je ne les utilise pas pour remplacer mon jugement — pour gagner du temps sur les tâches répétitives, et garder mon énergie pour ce qui compte vraiment.
+    </div>
+    <div class="footer-rule">
+      <span>Tous gratuits ou très peu coûteux</span>
+      <span>05 · Q1.2</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 06. BLOC 2 COVER                                              -->
+  <!-- ============================================================ -->
+  <section class="dark cover" data-label="06 Bloc 2 — Opportunités">
+    <div class="bloc-num">Bloc 02 · 3 questions</div>
+    <div>
+      <h2>Ce que l'IA <em>rend possible.</em></h2>
+      <div class="tag">Les vrais gains de performance — concrets et mesurables.<br/><span class="creole" style="color: oklch(0.82 0.08 60);">Sa li ka fè pou ou nan travay ou.</span></div>
+    </div>
+    <div class="bloc-meta">
+      <span>Opportunités</span>
+      <span>06</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 07. Q2.1 — 3 GAINS DE PERFORMANCE                             -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="07 Q2.1 Trois gains">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 2 · Question 2.1</div>
+      <div class="question">Selon vous, quels sont les trois gains de performance les plus significatifs qu'apporte l'IA — quel que soit le secteur ?</div>
+    </div>
+    <div class="points-3">
+      <div class="point">
+        <div class="idx">Gain 01 · Vitesse</div>
+        <h3>Une heure pour faire ce qui prenait une journée.</h3>
+        <p>Rédaction, synthèse, premier brouillon, plan détaillé. Le temps de démarrage devient quasi nul.</p>
+      </div>
+      <div class="point">
+        <div class="idx">Gain 02 · Qualité</div>
+        <h3>Un deuxième regard, immédiatement disponible.</h3>
+        <p>Relecture, détection d'erreurs, alternatives auxquelles je n'avais pas pensé. C'est un collègue infatigable.</p>
+      </div>
+      <div class="point">
+        <div class="idx">Gain 03 · Démocratisation</div>
+        <h3>Accès à des compétences que je n'ai pas.</h3>
+        <p>Un peu de code, un peu de droit, un peu de design. L'IA élargit le périmètre de ce que je peux entreprendre seul.</p>
+      </div>
+    </div>
+    <div class="footer-rule">
+      <span>Vitesse · Qualité · Démocratisation</span>
+      <span>07 · Q2.1</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 08. Q2.2 — IA EN INGÉNIERIE EN HAÏTI                          -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="08 Q2.2 IA Haïti ingénierie">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 2 · Question 2.2</div>
+      <div class="question">En ingénierie — quels exemples concrets d'IA voyez-vous émerger en Haïti ou dans la région ?</div>
+    </div>
+    <div class="haiti-list">
+      <div class="haiti-row">
+        <div class="domain">Cartographie</div>
+        <div class="ex">Analyse d'images satellites pour identifier zones à risque — cyclones, inondations, glissements.</div>
+      </div>
+      <div class="haiti-row">
+        <div class="domain">Énergie</div>
+        <div class="ex">Optimisation de mini-réseaux solaires, prévision de consommation, détection de pannes.</div>
+      </div>
+      <div class="haiti-row">
+        <div class="domain">Agriculture</div>
+        <div class="ex">Diagnostic de maladies de plantes à partir d'une simple photo prise au téléphone.</div>
+      </div>
+      <div class="haiti-row">
+        <div class="domain">BTP</div>
+        <div class="ex">Analyse de plans, devis automatisés, contrôle qualité par image sur chantier.</div>
+      </div>
+      <div class="haiti-row">
+        <div class="domain">Santé publique</div>
+        <div class="ex">Analyse de données épidémiologiques, alerte précoce, allocation de ressources.</div>
+      </div>
+      <div class="haiti-row">
+        <div class="domain">Éducation</div>
+        <div class="ex">Tuteurs IA en kreyòl, support pédagogique personnalisé pour classes nombreuses.</div>
+      </div>
+    </div>
+    <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line-soft); font-family: 'Source Serif 4', serif; font-style: italic; font-size: 30px; color: var(--fg-ink); line-height: 1.3;">
+      L'enjeu ici n'est pas d'inventer — c'est <em style="color: var(--accent-deep);">d'adapter et de déployer</em> ce qui existe déjà, à notre contexte.
+    </div>
+    <div class="footer-rule">
+      <span class="creole">« Pa envante — adapte, deplwaye. »</span>
+      <span>08 · Q2.2</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 09. Q2.3 — COMPÉTENCES URGENTES                               -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="09 Q2.3 Compétences urgentes">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 2 · Question 2.3</div>
+      <div class="question">Pour un jeune professionnel ou un étudiant — quelles compétences liées à l'IA sont les plus urgentes à développer ?</div>
+    </div>
+    <div class="points-3" style="grid-template-columns: 1fr 1fr 1fr 1fr; gap: 36px;">
+      <div class="point">
+        <div class="idx">01</div>
+        <h3>Savoir parler à la machine.</h3>
+        <p>Formuler une demande claire, donner du contexte, itérer. C'est la nouvelle alphabétisation.</p>
+      </div>
+      <div class="point">
+        <div class="idx">02</div>
+        <h3>Esprit critique, toujours.</h3>
+        <p>L'IA peut être confiante <em style="font-style:italic;">et</em> fausse. Vérifier, croiser, douter. C'est non-négociable.</p>
+      </div>
+      <div class="point">
+        <div class="idx">03</div>
+        <h3>Excellence du métier.</h3>
+        <p>L'IA amplifie l'expertise — elle ne la crée pas. Restez excellents dans votre discipline d'origine.</p>
+      </div>
+      <div class="point">
+        <div class="idx">04</div>
+        <h3>Curiosité &amp; pratique.</h3>
+        <p>30 minutes par jour à tester un outil. Pas besoin de cours — la pratique enseigne plus vite que les vidéos.</p>
+      </div>
+    </div>
+    <div class="footer-rule">
+      <span class="creole">« Aprann pale ak machin nan. »</span>
+      <span>09 · Q2.3</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 10. BLOC 3 COVER                                              -->
+  <!-- ============================================================ -->
+  <section class="dark cover" data-label="10 Bloc 3 — Usages pratiques">
+    <div class="bloc-num">Bloc 03 · 3 questions</div>
+    <div>
+      <h2>Se préparer<br/>et se <em>lancer.</em></h2>
+      <div class="tag">Du concret. Aujourd'hui. Sans être technicien.<br/><span class="creole" style="color: oklch(0.82 0.08 60);">Kòmanse jodi a — yon ti pa ase.</span></div>
+    </div>
+    <div class="bloc-meta">
+      <span>Usages pratiques</span>
+      <span>10</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 11. Q3.1 — CAS D'USAGE MESURABLE                              -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="11 Q3.1 Cas d'usage mesurable">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 3 · Question 3.1</div>
+      <div class="question">Un cas d'usage réel où l'IA a produit un résultat mesurable sur la performance d'une équipe ?</div>
+    </div>
+    <div class="case">
+      <div class="case-block">
+        <div class="lbl">Le contexte</div>
+        <p>Une équipe support client.<br/><br/>50 demandes par jour.<br/>Délai moyen de réponse : 24h.<br/>Frustration des agents et des clients.</p>
+      </div>
+      <div class="case-block">
+        <div class="lbl">L'action</div>
+        <p>Déploiement d'un assistant IA pour pré-rédiger les réponses, à partir des cas similaires précédents.<br/><br/><span class="lift">L'humain valide chaque envoi.</span></p>
+      </div>
+      <div class="case-block">
+        <div class="lbl">Le résultat — 90 jours</div>
+        <div class="big">24h → <span style="color: var(--accent-deep);">4h</span></div>
+        <p>Satisfaction client <strong>+18%</strong>.<br/>Agents recentrés sur les cas complexes.<br/>Aucune perte de poste.</p>
+      </div>
+    </div>
+    <div style="margin-top: auto; padding-top: 28px; border-top: 1px solid var(--line-soft); font-family: 'Source Serif 4', serif; font-style: italic; font-size: 30px; line-height: 1.3;">
+      La clé : <em style="color: var(--accent-deep);">l'IA accélère, l'humain décide</em>. C'est non-négociable.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 12. Q3.2 — PAR OÙ COMMENCER (4 ÉTAPES)                        -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="12 Q3.2 Par où commencer">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 3 · Question 3.2</div>
+      <div class="question">Sans être développeur — un professionnel peut-il adopter l'IA ? Par où commencer concrètement ?</div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="n">Étape 01</div>
+        <h4>Choisir UN outil.</h4>
+        <p>ChatGPT, Claude ou Gemini. La version gratuite suffit largement pour démarrer.</p>
+      </div>
+      <div class="step">
+        <div class="n">Étape 02</div>
+        <h4>Identifier UNE tâche.</h4>
+        <p>Une corvée répétitive de votre semaine : emails, résumés, préparer une réunion.</p>
+      </div>
+      <div class="step">
+        <div class="n">Étape 03</div>
+        <h4>Pratiquer 2 semaines.</h4>
+        <p>L'utiliser sur cette tâche, tous les jours. Mesurer le temps gagné, ajuster.</p>
+      </div>
+      <div class="step">
+        <div class="n">Étape 04</div>
+        <h4>Élargir progressivement.</h4>
+        <p>Une nouvelle tâche par mois. La confiance se construit par la pratique.</p>
+      </div>
+    </div>
+    <div style="margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--line); font-family: 'Source Serif 4', serif; font-size: 36px; font-style: italic; line-height: 1.3; max-width: 1600px;">
+      Ne cherchez pas à tout transformer d'un coup. <em style="color: var(--accent-deep);">Un petit gain reproduit chaque jour</em> bat une grande révolution qu'on n'applique jamais.
+    </div>
+    <div class="footer-rule">
+      <span class="creole">« Yon ti pa, chak jou. »</span>
+      <span>12 · Q3.2</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 13. Q3.3 — ACADÉMIQUE & FORMATION                             -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="13 Q3.3 Académique & formation">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 3 · Question 3.3</div>
+      <div class="question">Comment le monde académique intègre-t-il l'IA dans la formation des futurs ingénieurs ?</div>
+    </div>
+    <div class="points-3">
+      <div class="point">
+        <div class="idx">Changement 01 · Le contenu</div>
+        <h3>De nouveaux cours apparaissent.</h3>
+        <p>Fondamentaux de l'IA, données, éthique du numérique. Plus seulement réservés aux filières informatiques.</p>
+      </div>
+      <div class="point">
+        <div class="idx">Changement 02 · La méthode</div>
+        <h3>L'IA devient coéquipière d'apprentissage.</h3>
+        <p>Tuteur disponible 24/7, exercices personnalisés au niveau de chaque étudiant. La pédagogie devient plus individualisée.</p>
+      </div>
+      <div class="point">
+        <div class="idx">Changement 03 · L'évaluation</div>
+        <h3>On évalue le raisonnement, pas la restitution.</h3>
+        <p>Moins de "réciter ce qu'on a lu", plus de "résoudre un problème nouveau avec les outils disponibles".</p>
+      </div>
+    </div>
+    <div style="margin-top: auto; padding-top: 28px; border-top: 1px solid var(--line-soft); font-family: 'Source Serif 4', serif; font-style: italic; font-size: 30px; line-height: 1.3;">
+      Le défi n'est plus d'<em>interdire</em> l'IA aux étudiants. C'est de leur apprendre à <em style="color: var(--accent-deep);">l'utiliser avec rigueur</em>.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 14. BLOC 4 COVER                                              -->
+  <!-- ============================================================ -->
+  <section class="warm cover" data-label="14 Bloc 4 — Limites & éthique">
+    <div class="bloc-num">Bloc 04 · 3 questions</div>
+    <div>
+      <h2>Limites, risques,<br/><em>responsabilité.</em></h2>
+      <div class="tag">Faire confiance — mais avec discernement.<br/><span class="creole" style="color: oklch(0.82 0.08 60);">Fè konfyans ak je w byen louvri.</span></div>
+    </div>
+    <div class="bloc-meta">
+      <span>Éthique</span>
+      <span>14</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 15. Q4.1 — LIMITES TECHNIQUES                                 -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="15 Q4.1 Limites techniques">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 4 · Question 4.1</div>
+      <div class="question">Quelles sont les principales limites techniques qu'un professionnel doit connaître avant de faire confiance à l'IA pour des décisions ?</div>
+    </div>
+    <div class="limits">
+      <div class="limit">
+        <div class="tag">Limite 01</div>
+        <h4>Les hallucinations.</h4>
+        <p>L'IA peut inventer avec assurance. Citations fausses, chiffres inventés, sources inexistantes. Toujours vérifier ce qui sort.</p>
+      </div>
+      <div class="limit">
+        <div class="tag">Limite 02</div>
+        <h4>Pas de temps réel.</h4>
+        <p>Ses connaissances ont une date d'expiration. Pour l'actualité, croiser avec des sources fiables et récentes.</p>
+      </div>
+      <div class="limit">
+        <div class="tag">Limite 03</div>
+        <h4>Les biais culturels.</h4>
+        <p>L'IA reflète les données sur lesquelles elle a été entraînée — surtout anglo-saxonnes. Biais linguistiques, sociaux, culturels réels.</p>
+      </div>
+      <div class="limit">
+        <div class="tag">Limite 04</div>
+        <h4>La confidentialité.</h4>
+        <p>Tout ce que vous tapez peut être stocké. Jamais de données sensibles, médicales, financières dans un outil public.</p>
+      </div>
+    </div>
+    <div style="margin-top: auto; padding-top: 28px; border-top: 1px solid var(--line); font-family: 'Source Serif 4', serif; font-style: italic; font-size: 34px; line-height: 1.25;">
+      Règle d'or — <em style="color: var(--accent-deep);">ne jamais déléguer une décision importante à l'IA seule</em>.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 16. Q4.2 — PERTE D'EMPLOIS                                    -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="16 Q4.2 Perte d'emplois">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 4 · Question 4.2</div>
+      <div class="question">La crainte de la perte d'emplois est réelle. Est-elle légitime ? Comment y répondre honnêtement ?</div>
+    </div>
+    <div class="honest">
+      <div class="pane">
+        <h4>Ce qui est vrai</h4>
+        <ul>
+          <li>Certaines tâches vont disparaître — saisie de données, traduction basique, recherche documentaire simple.</li>
+          <li>Le marché du travail va se reconfigurer, et vite. Les 5 prochaines années seront mouvementées.</li>
+          <li>Certains métiers entiers seront fortement bousculés. Ne pas le nier.</li>
+        </ul>
+      </div>
+      <div class="pane warm">
+        <h4>Ce qui est aussi vrai</h4>
+        <ul>
+          <li>Ce ne sont pas les emplois qui disparaissent — ce sont les <em>tâches</em>. La différence est immense.</li>
+          <li>De nouveaux métiers émergent : conception de prompts, audit IA, intégration métier, supervision.</li>
+          <li>L'IA ne remplacera pas les professionnels — les professionnels qui l'utilisent remplaceront ceux qui ne l'utilisent pas.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line); font-family: 'Source Serif 4', serif; font-style: italic; font-size: 32px; line-height: 1.3; max-width: 1700px;">
+      La vraie question n'est pas « vais-je être remplacé ? » — c'est <em style="color: var(--accent-deep);">comment me rendre indispensable ?</em>  Expertise métier + maîtrise de l'IA + qualités humaines.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 17. Q4.3 — VALEURS, INTÉGRITÉ, JUSTICE                        -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="17 Q4.3 Valeurs & éthique">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 4 · Question 4.3</div>
+      <div class="question">Comment articuler l'usage de l'IA avec des valeurs comme l'intégrité, la vérité, la justice ? Y a-t-il des lignes à ne pas franchir ?</div>
+    </div>
+    <div class="ethics">
+      <div class="red">
+        <h4>Lignes à ne pas franchir</h4>
+        <ul>
+          <li>Présenter un contenu IA comme entièrement personnel quand cela ment sur la nature du travail.</li>
+          <li>Utiliser l'IA pour manipuler, désinformer, créer des deepfakes malveillants.</li>
+          <li>S'en servir pour discriminer : recrutement biaisé, scoring social injuste.</li>
+        </ul>
+      </div>
+      <div class="green">
+        <h4>Posture juste</h4>
+        <ul>
+          <li><strong>Transparence</strong> — dire quand on utilise l'IA, surtout dans un contexte de confiance.</li>
+          <li><strong>Responsabilité</strong> — la décision finale et la signature restent humaines.</li>
+          <li><strong>Justice</strong> — se demander qui paie le prix de mon gain de productivité.</li>
+        </ul>
+      </div>
+      <div class="rule">
+        Cadre simple — <em style="color: var(--accent-deep);">si je ne le ferais pas devant ma communauté, devant ma famille, je ne le fais pas avec l'IA</em>.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 18. BLOC 5 COVER                                              -->
+  <!-- ============================================================ -->
+  <section class="dark cover" data-label="18 Bloc 5 — Perspectives">
+    <div class="bloc-num">Bloc 05 · 3 questions</div>
+    <div>
+      <h2>Mieux agir <em>demain.</em></h2>
+      <div class="tag">L'horizon, le message, la recommandation.<br/><span class="creole" style="color: oklch(0.82 0.08 60);">Sa demen ap mande nou.</span></div>
+    </div>
+    <div class="bloc-meta">
+      <span>Perspectives</span>
+      <span>18</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 19. Q5.1 — DANS 5 À 10 ANS                                    -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="19 Q5.1 Horizon 5–10 ans">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 5 · Question 5.1</div>
+      <div class="question">Dans 5 à 10 ans — à quoi ressemblera la collaboration humain-IA dans le monde du travail ? L'humain gardera-t-il le dessus ?</div>
+    </div>
+    <div class="certitudes">
+      <div class="cert">
+        <div class="n">01</div>
+        <h4>L'IA sera partout — et invisible.</h4>
+        <p>Comme l'électricité aujourd'hui. On ne dira plus « utiliser l'IA », on dira simplement « travailler ».</p>
+      </div>
+      <div class="cert">
+        <div class="n">02</div>
+        <h4>Chacun aura son agent personnel.</h4>
+        <p>Un assistant qui connaît votre contexte, votre style, vos préférences. Vraiment personnalisé.</p>
+      </div>
+      <div class="cert">
+        <div class="n">03</div>
+        <h4>La valeur se déplace.</h4>
+        <p>Vers ce que l'IA ne sait pas faire : relation, jugement éthique, créativité d'usage, sens, présence.</p>
+      </div>
+    </div>
+    <div style="margin-top: auto; padding-top: 32px; border-top: 1px solid var(--line); font-family: 'Source Serif 4', serif; font-size: 38px; line-height: 1.25; max-width: 1700px;">
+      L'humain gardera-t-il le dessus ? <em style="color: var(--accent-deep); font-style: italic;">Oui — à condition de continuer à cultiver ce qui le rend humain.</em>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 20. Q5.2 — MESSAGE FORT AUX HÉSITANTS                         -->
+  <!-- ============================================================ -->
+  <section class="q-slide" data-label="20 Q5.2 Message aux hésitants">
+    <div class="head">
+      <div class="eyebrow"><span class="dot"></span>Bloc 5 · Question 5.2</div>
+      <div class="question">Quel message fort souhaitez-vous adresser ce soir à ceux qui hésitent à intégrer l'IA dans leur vie professionnelle ?</div>
+    </div>
+    <div class="three-lines">
+      <div class="line">
+        <div class="n">01</div>
+        <div class="txt">Vous n'avez pas besoin d'être technique. Vous avez besoin d'être <em style="color: var(--accent-deep); font-style: italic;">curieux</em>.</div>
+      </div>
+      <div class="line">
+        <div class="n">02</div>
+        <div class="txt">Le coût d'<em style="font-style: italic;">attendre</em> est aujourd'hui plus élevé que le coût d'<em style="color: var(--accent-deep); font-style: italic;">essayer</em>.</div>
+      </div>
+      <div class="line">
+        <div class="n">03</div>
+        <div class="txt">Commencez petit, aujourd'hui. <em style="color: var(--accent-deep); font-style: italic;">Trente minutes. Une tâche. Un outil.</em></div>
+      </div>
+    </div>
+    <div style="margin-top: auto; padding-top: 28px; border-top: 1px solid var(--line-soft); font-family: 'Geist Mono', monospace; font-size: 28px; color: var(--accent-deep); letter-spacing: 0.02em;">
+      « Pa tann demen — demen kòmanse jodi a. »
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 21. Q5.3 — UNE SEULE RECOMMANDATION                           -->
+  <!-- ============================================================ -->
+  <section class="quote-slide paper" data-label="21 Q5.3 Une seule recommandation">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Bloc 5 · Question 5.3 · La recommandation unique</div>
+      <div class="quote">
+        Réservez <em>trente minutes par semaine</em> pour expérimenter un outil d'IA avec une vraie question de votre travail.
+      </div>
+      <div class="attribution">Une habitude · Pas une formation</div>
+    </div>
+    <div class="pillars">
+      <div class="p">
+        <div class="lbl">Ressource</div>
+        <div class="txt">La pratique enseigne mieux que mille vidéos.</div>
+      </div>
+      <div class="p">
+        <div class="lbl">Habitude</div>
+        <div class="txt">La régularité bat l'intensité — toujours.</div>
+      </div>
+      <div class="p">
+        <div class="lbl">Conviction</div>
+        <div class="txt">L'IA est un partenaire, jamais un remplaçant.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 22. MANTRAS — PHRASES DE RÉSERVE                              -->
+  <!-- ============================================================ -->
+  <section class="warm" data-label="22 Mantras & phrases de réserve">
+    <div class="eyebrow" style="color: rgba(242,237,228,0.65);"><span class="dot"></span>Boîte à outils · à dégainer si besoin</div>
+    <div style="font-family: 'Source Serif 4', serif; font-size: 52px; line-height: 1.08; letter-spacing: -0.02em; margin-top: 24px; max-width: 1600px;">
+      Six phrases <em style="font-style: italic; color: oklch(0.82 0.08 60);">à garder en réserve</em> pour réorienter, conclure, ou rebondir.
+    </div>
+    <div class="mantras-grid">
+      <div class="mantra">
+        <div class="fr">Se yon zouti — pa yon majisyen.</div>
+        <div class="ht">FR · C'est un outil, pas un magicien.</div>
+      </div>
+      <div class="mantra">
+        <div class="fr">L'IA accélère. L'humain décide.</div>
+        <div class="ht">KR · IA ale vit, men se moun ki deside.</div>
+      </div>
+      <div class="mantra">
+        <div class="fr">L'IA amplifie l'expertise — elle ne la crée pas.</div>
+        <div class="ht">KR · Li fè konesans ou pi gwo, li pa bay ou li.</div>
+      </div>
+      <div class="mantra">
+        <div class="fr">Le coût d'attendre est plus élevé que le coût d'essayer.</div>
+        <div class="ht">KR · Tann koute pi chè pase eseye.</div>
+      </div>
+      <div class="mantra">
+        <div class="fr">Transparence. Responsabilité. Justice.</div>
+        <div class="ht">KR · Klè · Responsab · Jis.</div>
+      </div>
+      <div class="mantra">
+        <div class="fr">Un petit pas, chaque jour, vaut plus qu'une grande révolution sans lendemain.</div>
+        <div class="ht">KR · Yon ti pa chak jou.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 23. CHECKLIST AVANT DE MONTER                                 -->
+  <!-- ============================================================ -->
+  <section data-label="23 Checklist scène">
+    <div class="eyebrow"><span class="dot"></span>Dernière minute · avant de monter sur scène</div>
+    <div style="font-family: 'Source Serif 4', serif; font-size: 96px; line-height: 0.98; letter-spacing: -0.025em; margin-top: 32px; max-width: 1500px;">
+      Respirer. <em style="font-style: italic; color: var(--accent-deep);">Sourire.</em> Être présent.
+    </div>
+    <div class="checklist">
+      <div class="check-item">
+        <div class="box"></div>
+        <div class="label">Parler lentement<span class="sub">Mieux vaut un silence qu'un mot précipité.</span></div>
+      </div>
+      <div class="check-item">
+        <div class="box"></div>
+        <div class="label">Un exemple concret par réponse<span class="sub">Le public retient les histoires, pas les concepts.</span></div>
+      </div>
+      <div class="check-item">
+        <div class="box"></div>
+        <div class="label">Garder une phrase forte en réserve<span class="sub">Aller piocher dans les mantras si besoin.</span></div>
+      </div>
+      <div class="check-item">
+        <div class="box"></div>
+        <div class="label">Honnêteté &gt; performance<span class="sub">« Je ne sais pas » est une réponse acceptable.</span></div>
+      </div>
+      <div class="check-item">
+        <div class="box"></div>
+        <div class="label">Regarder l'audience<span class="sub">Pas les autres intervenants, pas l'écran.</span></div>
+      </div>
+      <div class="check-item">
+        <div class="box"></div>
+        <div class="label">Conclure avec gratitude<span class="sub">Remercier le public et les organisateurs.</span></div>
+      </div>
+    </div>
+    <div class="footer-rule">
+      <span class="creole">« Ou pare. Bon panel. »</span>
+      <span>23 · Fin</span>
+    </div>
+  </section>
+
+</deck-stage>
+</body>
+</html>
